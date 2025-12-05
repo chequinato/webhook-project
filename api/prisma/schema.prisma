@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Webhook {
+  id        String   @id @default(cuid())
+  method    String
+  pathname  String
+  createdAt DateTime @default(now())
+
+  deliveries WebhookDelivery[]
+}
+
+model WebhookDelivery {
+  id         String   @id @default(cuid())
+  payload    Json
+  signature  String?
+  createdAt  DateTime @default(now())
+  webhookId  String
+  webhook    Webhook  @relation(fields: [webhookId], references: [id])
+}
