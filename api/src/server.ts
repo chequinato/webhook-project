@@ -8,12 +8,14 @@ import {
 import { fastifySwagger } from '@fastify/swagger'
 import { fastifyCors } from '@fastify/cors'
 import ScalarApiReference from '@scalar/fastify-api-reference'
-import { listWebhooks } from './routes/list-webhooks'
+
+import { listWebhooks } from './routes/list-webhooks.ts'
+import { getWebhook } from './routes/get-webhook.ts'
+import { deleteWebhook } from './routes/delete-webhook.ts'
+import { captureWebhook } from './routes/capture-webhook.ts'
+import { generateHandler } from './routes/generate-handler.ts'
+
 import { env } from './env'
-import { getWebhook } from './routes/get-webhook'
-import { deleteWebhook } from './routes/delete-webhook'
-import { captureWebhook } from './routes/capture-webhook'
-import { generateHandler } from './routes/generate-handler'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -23,7 +25,6 @@ app.setSerializerCompiler(serializerCompiler)
 app.register(fastifyCors, {
   origin: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  // credentials: true,
 })
 
 app.register(fastifySwagger, {
@@ -41,11 +42,18 @@ app.register(ScalarApiReference, {
   routePrefix: '/docs',
 })
 
+// Rotas
 app.register(listWebhooks)
 app.register(getWebhook)
 app.register(deleteWebhook)
 app.register(captureWebhook)
 app.register(generateHandler)
+
+// Captura qualquer erro e retorna 500
+app.setErrorHandler((error, request, reply) => {
+  console.error('🔥 API ERROR:', error)
+  reply.status(500).send({ error: error.message })
+})
 
 app.listen({ port: env.PORT, host: '0.0.0.0' }).then(() => {
   console.log('🔥 HTTP server running on http://localhost:3333!')
