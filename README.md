@@ -57,12 +57,19 @@ Ou seja: o desenvolvedor deixa de “adivinhar” como tratar um webhook e passa
 Funcionalidades
 
 Recebimento de webhooks externos
+
 Registro de todas as requisições recebidas
+
 Visualização completa de headers, body e metadata
+
 Organização dos eventos recebidos
+
 Análise manual de cada payload
+
 Geração automática de handlers com IA
+
 Integração com Gemini para geração de código
+
 Base para padronização de webhooks no sistema
 
 ────────────────────
@@ -71,16 +78,11 @@ Como a Inteligência Artificial funciona no projeto
 
 Fluxo de recebimento do webhook:
 
-Um sistema externo envia um webhook para o endpoint configurado.
-A aplicação recebe a requisição e registra todos os dados.
-O desenvolvedor pode clicar no evento e visualizar o payload completo.
+Um sistema externo envia um webhook para o endpoint configurado. A aplicação recebe a requisição e registra todos os dados. O desenvolvedor pode clicar no evento e visualizar o payload completo.
 
 Fluxo de geração do handler com IA:
 
-O desenvolvedor seleciona um webhook recebido.
-Os dados do payload são enviados para a IA (Gemini).
-A IA analisa a estrutura do evento.
-É gerado automaticamente um código de handler.
+O desenvolvedor seleciona um webhook recebido. Os dados do payload são enviados para a IA (Gemini). A IA analisa a estrutura do evento. É gerado automaticamente um código de handler.
 
 Esse handler serve como:
 
@@ -98,7 +100,7 @@ Ou seja, a IA gera o código que você normalmente escreveria manualmente para t
 
 Banco de Dados
 
-O projeto utiliza um banco de dados para armazenar e organizar os webhooks recebidos.
+O projeto utiliza Prisma como ORM e um banco de dados para armazenar e organizar os webhooks recebidos.
 
 São armazenados:
 
@@ -128,27 +130,15 @@ O banco permite histórico, rastreabilidade e análise posterior dos eventos.
 
 Tecnologias Utilizadas
 
-Backend:
-Node.js
-TypeScript
-Express ou Fastify
-API REST
-dotenv
+Backend: Node.js, TypeScript, Fastify (API REST), dotenv
 
-Inteligência Artificial:
-Google Gemini API
-Prompt engineering para geração de código
-IA aplicada à produtividade do desenvolvedor
+Inteligência Artificial: Google Gemini API, Prompt engineering para geração de código
 
-Banco de Dados:
-Banco relacional (PostgreSQL ou SQLite)
-ORM ou query builder
+Banco de Dados: PostgreSQL ou SQLite com Prisma ORM
 
-Outras ferramentas:
-CORS
-Nodemon ou ts-node
-Validação de requisições
-Serialização de payloads
+Outras ferramentas: CORS, tsx, validação de requisições, serialização de payloads
+
+Containers: Docker (para rodar o banco e a aplicação de forma isolada)
 
 ────────────────────
 
@@ -157,9 +147,13 @@ Arquitetura do Projeto
 O projeto é organizado de forma simples e extensível:
 
 Server: servidor HTTP e rotas de webhook
+
 Controllers: recebimento e validação das requisições
-Database: persistência dos eventos
+
+Database: persistência dos eventos via Prisma
+
 Services de IA: geração automática de handlers
+
 Utils: helpers e normalização de dados
 
 Essa arquitetura permite adicionar novos tipos de webhook sem bagunçar o código.
@@ -169,41 +163,75 @@ Essa arquitetura permite adicionar novos tipos de webhook sem bagunçar o códig
 Pré-requisitos
 
 Node.js versão 18 ou superior
-Gerenciador de pacotes npm ou yarn
+
+pnpm (ou npm/yarn)
+
 Conta com acesso à API do Gemini
+
 Banco de dados configurado
+
+Docker (opcional, mas recomendado para banco)
 
 ────────────────────
 
-Instalação
+Instalação e Execução
 
-Clonar o repositório
-Instalar dependências
-Configurar variáveis de ambiente
-Rodar o servidor em modo desenvolvimento
+1. Clonar o repositório:
+
+git clone https://github.com/chequinato/webhook-project.git
+cd webhook-project/api
+
+
+2. Selecionar a versão correta do Node (com NVM):
+
+nvm use 20.18.1
+
+
+3. Ativar Corepack e preparar pnpm:
+
+corepack enable
+corepack prepare pnpm@8.10.0 --activate
+
+
+4. Instalar dependências:
+
+pnpm install
+
+
+5. Rodar banco de dados com Docker (opcional, mas recomendado):
+
+docker compose up -d
+
+
+6. Rodar o backend:
+
+pnpm dev
+
+
+Após isso, o servidor vai estar rodando e pronto para receber webhooks.
 
 ────────────────────
 
 Variáveis de Ambiente
 
 PORT: porta da aplicação
+
 DATABASE_URL: conexão com o banco de dados
+
 GEMINI_API_KEY: chave da API Gemini
-
-────────────────────
-
-Execução do Projeto
-
-Após iniciar o servidor, basta configurar serviços externos para enviar webhooks para o endpoint da aplicação. Cada evento recebido ficará registrado e disponível para análise.
 
 ────────────────────
 
 Casos de Uso
 
 Desenvolvimento de integrações com APIs externas
+
 Inspeção de webhooks de pagamento
+
 Debug de eventos externos
+
 Criação rápida de handlers backend
+
 Aprendizado sobre comunicação entre sistemas
 
 ────────────────────
@@ -211,10 +239,15 @@ Aprendizado sobre comunicação entre sistemas
 Roadmap e Evoluções Futuras
 
 Suporte a múltiplos tipos de webhook
+
 Templates de handlers por framework
+
 Versionamento de eventos
+
 Validação automática de payloads
+
 Dashboard visual de eventos
+
 Deploy em produção
 
 ────────────────────
